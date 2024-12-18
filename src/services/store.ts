@@ -6,9 +6,11 @@ import {
   useSelector as selectorHook
 } from 'react-redux';
 import { ingredientsReducer } from './indgredientSlice/ingredientSlice';
+import { burgerConstructorReducer } from './burgerSlice/burgerSlice';
 
 const rootReducer = {
-  ingredients: ingredientsReducer
+  ingredients: ingredientsReducer,
+  burgerConstructor: burgerConstructorReducer
 }; // Заменить на импорт настоящего редьюсера
 
 const store = configureStore({

@@ -11,6 +11,7 @@ export const BurgerIngredients: FC = () => {
   // const buns = [];
   // const mains = [];
   // const sauces = [];
+  // забрать ingredients из store и фильтровать??
   const buns = useSelector(getIngredientsData).filter(
     (item) => item.type === 'bun'
   );

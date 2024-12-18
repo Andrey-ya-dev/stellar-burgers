@@ -13,14 +13,19 @@ import '../../index.css';
 import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { ReactNode } from 'react';
 
 type TProtectedRouter = {
   children: ReactNode;
 };
 const ProtectedRouter = ({ children }: TProtectedRouter) => {
-  console.log('hello');
+  const onlyUnAuth = false;
+
+  if (!onlyUnAuth) {
+    return <Navigate replace to='/login' />;
+  }
+
   return children;
 };
 
