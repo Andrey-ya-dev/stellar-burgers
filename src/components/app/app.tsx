@@ -20,6 +20,7 @@ type TProtectedRouter = {
   children: ReactNode;
 };
 const ProtectedRouter = ({ children }: TProtectedRouter) => {
+  console.log('hello');
   return children;
 };
 
