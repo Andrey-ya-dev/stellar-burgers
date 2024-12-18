@@ -17,3 +17,7 @@ root.render(
     </Provider>
   </React.StrictMode>
 );
+/*
+вместо Math.random() поменять на uuid
+посмотреть родителей UI компоненты и логику прописть там?? 
+*/

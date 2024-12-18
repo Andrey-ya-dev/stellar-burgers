@@ -22,14 +22,15 @@ import {
 } from 'react-router-dom';
 import { ReactNode } from 'react';
 
-type TProtectedRouter = {
+type TProtectedRoute = {
   children: ReactNode;
+  onlyUnAuth?: boolean;
 };
-const ProtectedRouter = ({ children }: TProtectedRouter) => {
-  const onlyUnAuth = true;
+const ProtectedRoute = ({ onlyUnAuth, children }: TProtectedRoute) => {
+  const location = useLocation();
 
   if (!onlyUnAuth) {
-    return <Navigate replace to='/login' />;
+    return <Navigate replace to='/login' state={{ from: location }} />;
   }
 
   return children;
@@ -49,49 +50,49 @@ const App = () => {
         <Route
           path='/login'
           element={
-            <ProtectedRouter>
+            <ProtectedRoute onlyUnAuth>
               <Login />
-            </ProtectedRouter>
+            </ProtectedRoute>
           }
         />
         <Route
           path='/register'
           element={
-            <ProtectedRouter>
+            <ProtectedRoute onlyUnAuth>
               <Register />
-            </ProtectedRouter>
+            </ProtectedRoute>
           }
         />
         <Route
           path='/forgot-password'
           element={
-            <ProtectedRouter>
+            <ProtectedRoute onlyUnAuth>
               <ForgotPassword />
-            </ProtectedRouter>
+            </ProtectedRoute>
           }
         />
         <Route
           path='/reset-password'
           element={
-            <ProtectedRouter>
+            <ProtectedRoute>
               <ResetPassword />
-            </ProtectedRouter>
+            </ProtectedRoute>
           }
         />
         <Route
           path='/profile'
           element={
-            <ProtectedRouter>
+            <ProtectedRoute>
               <Profile />
-            </ProtectedRouter>
+            </ProtectedRoute>
           }
         />
         <Route
           path='/profile/orders'
           element={
-            <ProtectedRouter>
+            <ProtectedRoute>
               <ProfileOrders />
-            </ProtectedRouter>
+            </ProtectedRoute>
           }
         />
         <Route path='*' element={<NotFound404 />} />
@@ -124,9 +125,9 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <Modal title='' onClose={() => {}}>
-                <ProtectedRouter>
+                <ProtectedRoute>
                   <OrderInfo />
-                </ProtectedRouter>
+                </ProtectedRoute>
               </Modal>
             }
           />
