@@ -7,10 +7,12 @@ import {
 } from 'react-redux';
 import { ingredientsReducer } from './indgredientSlice/ingredientSlice';
 import { burgerConstructorReducer } from './burgerSlice/burgerSlice';
+import { orderReducer } from './OrderSlice/orderSlice';
 
 const rootReducer = {
   ingredients: ingredientsReducer,
-  burgerConstructor: burgerConstructorReducer
+  burgerConstructor: burgerConstructorReducer,
+  order: orderReducer
 }; // Заменить на импорт настоящего редьюсера
 
 const store = configureStore({
