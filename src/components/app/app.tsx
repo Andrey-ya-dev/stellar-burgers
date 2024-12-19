@@ -18,7 +18,8 @@ import {
   Route,
   Routes,
   useLocation,
-  useNavigate
+  useNavigate,
+  useParams
 } from 'react-router-dom';
 import { ReactNode } from 'react';
 
@@ -40,6 +41,7 @@ const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state?.background;
+  const orderNumber = location.state?.number;
 
   return (
     <div className={styles.app}>
@@ -103,7 +105,12 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title='' onClose={() => {}}>
+              <Modal
+                title={orderNumber ? `#0${orderNumber}` : ''}
+                onClose={() => {
+                  navigate(-1);
+                }}
+              >
                 <OrderInfo />
               </Modal>
             }

@@ -1,9 +1,13 @@
-import { getFeedsApi } from '@api';
+import { getFeedsApi, orderBurgerApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 
 export const getFeedsData = createAsyncThunk('api/feeds', async () =>
   getFeedsApi()
+);
+export const sendOrder = createAsyncThunk(
+  'api/sendOrder',
+  async (data: string[]) => orderBurgerApi(data)
 );
 
 type TInitialOrder = {
@@ -13,6 +17,7 @@ type TInitialOrder = {
   feeds: TOrder[];
   isFeedsLoading: boolean;
   errorMsg: string | undefined;
+  orderRequest: boolean;
 };
 
 const initialOrder: TInitialOrder = {
@@ -21,7 +26,8 @@ const initialOrder: TInitialOrder = {
   totalToday: 0,
   feeds: [],
   isFeedsLoading: false,
-  errorMsg: ''
+  errorMsg: '',
+  orderRequest: false
 };
 
 const orderSlice = createSlice({
@@ -43,6 +49,16 @@ const orderSlice = createSlice({
       })
       .addCase(getFeedsData.rejected, (state, action) => {
         state.errorMsg = action.error.message;
+      })
+      .addCase(sendOrder.pending, (state) => {
+        console.log('pendig send');
+      })
+      .addCase(sendOrder.fulfilled, (state, action) => {
+        console.log('fullfiled send', action);
+      })
+      .addCase(sendOrder.rejected, (state, action) => {
+        console.log('errr send', action);
+        state.orderRequest = false;
       });
   },
   selectors: {
@@ -51,10 +67,16 @@ const orderSlice = createSlice({
     },
     getFeedLoaderStoreData(state) {
       return state.isFeedsLoading;
+    },
+    getOrderRequestFlag(state) {
+      return state.orderRequest;
     }
   }
 });
 
-export const { getFeedLoaderStoreData, getFeedsStoreData } =
-  orderSlice.selectors;
+export const {
+  getFeedLoaderStoreData,
+  getFeedsStoreData,
+  getOrderRequestFlag
+} = orderSlice.selectors;
 export const orderReducer = orderSlice.reducer;
