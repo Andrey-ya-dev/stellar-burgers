@@ -8,11 +8,13 @@ import {
 import { ingredientsReducer } from './indgredientSlice/ingredientSlice';
 import { burgerConstructorReducer } from './burgerSlice/burgerSlice';
 import { orderReducer } from './OrderSlice/orderSlice';
+import { authReducer } from './authSlice/authSlice';
 
 const rootReducer = {
   ingredients: ingredientsReducer,
   burgerConstructor: burgerConstructorReducer,
-  order: orderReducer
+  order: orderReducer,
+  auth: authReducer
 }; // Заменить на импорт настоящего редьюсера
 
 const store = configureStore({

@@ -2,7 +2,7 @@ import { FC, useMemo } from 'react';
 import { TConstructorIngredient, TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { sendOrder } from '../../services/OrderSlice/orderSlice';
 
 export const BurgerConstructor: FC = () => {
@@ -18,8 +18,9 @@ export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const constructorItems = useSelector((state) => state.burgerConstructor);
 
-  const orderRequest = false;
+  // const orderRequest = useSelector((state) => state.auth.orderRequest);
 
+  const orderRequest = false;
   const orderModalData = null;
 
   const orderSendData = useMemo(() => {
@@ -30,14 +31,17 @@ export const BurgerConstructor: FC = () => {
   }, [constructorItems]);
 
   const onOrderClick = () => {
-    // if (!constructorItems.bun || orderRequest) return;
+    if (!constructorItems.bun || orderRequest) return;
     // if (!orderRequest) {
+    //   console.log('send order redirect unauth');
+    //   // Navigate component??
     //   return navigate('/login');
+    //   // return <Navigate replace to={'/login'} />;
     // }
-    // console.log(orderSendData);
+    console.log('send order');
     dispatch(sendOrder(orderSendData));
   };
-  const closeOrderModal = () => {};
+  const closeOrderModal = () => navigate('/');
 
   const price = useMemo(
     () =>

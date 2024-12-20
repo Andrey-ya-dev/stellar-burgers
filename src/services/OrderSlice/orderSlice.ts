@@ -29,7 +29,7 @@ const initialOrder: TInitialOrder = {
   errorMsg: '',
   orderRequest: false
 };
-
+// начать orderRequest
 const orderSlice = createSlice({
   name: 'order',
   initialState: initialOrder,

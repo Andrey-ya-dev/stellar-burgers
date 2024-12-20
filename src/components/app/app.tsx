@@ -22,6 +22,7 @@ import {
   useParams
 } from 'react-router-dom';
 import { ReactNode } from 'react';
+import { useSelector } from '../../services/store';
 
 type TProtectedRoute = {
   children: ReactNode;
@@ -29,9 +30,21 @@ type TProtectedRoute = {
 };
 const ProtectedRoute = ({ onlyUnAuth, children }: TProtectedRoute) => {
   const location = useLocation();
+  const isUserLoading = useSelector((state) => state.auth.isUserLoading);
+  const user = useSelector((state) => state.auth.user);
 
-  if (!onlyUnAuth) {
+  if (isUserLoading) {
+    console.log('preloader');
+  }
+
+  if (!onlyUnAuth && !user.name) {
     return <Navigate replace to='/login' state={{ from: location }} />;
+  }
+
+  if (onlyUnAuth && user.name) {
+    const from = location.state?.from || { pathname: '/' };
+
+    return <Navigate replace to={from} />;
   }
 
   return children;
