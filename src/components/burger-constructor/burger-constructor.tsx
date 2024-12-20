@@ -17,6 +17,7 @@ export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const constructorItems = useSelector((state) => state.burgerConstructor);
+  const isAuthUser = useSelector((state) => state.auth.isAuthUser);
 
   // const orderRequest = useSelector((state) => state.auth.orderRequest);
 
@@ -31,16 +32,22 @@ export const BurgerConstructor: FC = () => {
   }, [constructorItems]);
 
   const onOrderClick = () => {
+    if (!isAuthUser) {
+      console.log('redirect order');
+
+      return navigate('/login');
+      return <Navigate to={'/login'} />;
+    }
+
     if (!constructorItems.bun || orderRequest) return;
-    // if (!orderRequest) {
-    //   console.log('send order redirect unauth');
-    //   // Navigate component??
-    //   return navigate('/login');
-    //   // return <Navigate replace to={'/login'} />;
-    // }
-    console.log('send order');
-    dispatch(sendOrder(orderSendData));
+
+    if (isAuthUser) {
+      console.log('send order');
+
+      dispatch(sendOrder(orderSendData));
+    }
   };
+
   const closeOrderModal = () => navigate('/');
 
   const price = useMemo(

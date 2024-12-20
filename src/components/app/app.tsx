@@ -21,8 +21,9 @@ import {
   useNavigate,
   useParams
 } from 'react-router-dom';
-import { ReactNode } from 'react';
-import { useSelector } from '../../services/store';
+import { ReactNode, useEffect } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { getCurrentUser } from '../../services/authSlice/authSlice';
 
 type TProtectedRoute = {
   children: ReactNode;
@@ -55,6 +56,10 @@ const App = () => {
   const navigate = useNavigate();
   const background = location.state?.background;
   const orderNumber = location.state?.number;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, []);
 
   return (
     <div className={styles.app}>

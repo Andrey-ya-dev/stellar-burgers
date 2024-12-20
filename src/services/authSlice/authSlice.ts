@@ -1,4 +1,5 @@
 import {
+  getUserApi,
   loginUserApi,
   logoutApi,
   registerUserApi,
@@ -7,6 +8,7 @@ import {
 } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
+import { setCookie } from '../../utils/cookie';
 
 export const registrateUser = createAsyncThunk(
   'api/registrate',
@@ -14,10 +16,21 @@ export const registrateUser = createAsyncThunk(
 );
 export const loginUser = createAsyncThunk(
   'api/login',
-  async (data: TLoginData) => loginUserApi(data)
+  async (data: TLoginData) => {
+    const loginData = await loginUserApi(data);
+    if (!loginData?.success) {
+      return Promise.reject(data);
+    }
+    setCookie('accessToken', loginData.accessToken);
+    localStorage.setItem('refreshToken', loginData.refreshToken);
+    return loginData;
+  }
 );
 export const logOutUser = createAsyncThunk('api/logOut', async () =>
   logoutApi()
+);
+export const getCurrentUser = createAsyncThunk('api/getUser', async () =>
+  getUserApi()
 );
 
 const authInitial: TRegisterData & {
@@ -28,6 +41,7 @@ const authInitial: TRegisterData & {
   user: TUser;
   errMsg: string;
   orderRequest: boolean;
+  isAuthUser: boolean;
 } = {
   email: '',
   name: '',
@@ -38,7 +52,8 @@ const authInitial: TRegisterData & {
   accessToken: '',
   errMsg: '',
   orderRequest: false,
-  isUserLoading: false
+  isUserLoading: false,
+  isAuthUser: false
 };
 
 const authSlice = createSlice({
@@ -71,6 +86,7 @@ const authSlice = createSlice({
         state.isUserLoading = false;
         state.user = action.payload.user;
         state.orderRequest = true;
+        state.isAuthUser = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -79,6 +95,10 @@ const authSlice = createSlice({
       })
       .addCase(logOutUser.fulfilled, (state, action) => {
         console.log('log out ', action.payload);
+      })
+      .addCase(getCurrentUser.fulfilled, (state, action) => {
+        state.isAuthUser = true;
+        state.user = action.payload.user;
       });
   }
 });

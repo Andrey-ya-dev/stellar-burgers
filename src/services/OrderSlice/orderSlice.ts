@@ -1,4 +1,4 @@
-import { getFeedsApi, orderBurgerApi } from '@api';
+import { getFeedsApi, getOrdersApi, orderBurgerApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 
@@ -9,6 +9,10 @@ export const sendOrder = createAsyncThunk(
   'api/sendOrder',
   async (data: string[]) => orderBurgerApi(data)
 );
+export const getUsersHistoryOrders = createAsyncThunk(
+  'api/usersOrders',
+  async () => getOrdersApi()
+);
 
 type TInitialOrder = {
   orders: TOrder[];
@@ -18,6 +22,8 @@ type TInitialOrder = {
   isFeedsLoading: boolean;
   errorMsg: string | undefined;
   orderRequest: boolean;
+  userOrders: TOrder[];
+  orderModalData: TOrder | null;
 };
 
 const initialOrder: TInitialOrder = {
@@ -27,7 +33,9 @@ const initialOrder: TInitialOrder = {
   feeds: [],
   isFeedsLoading: false,
   errorMsg: '',
-  orderRequest: false
+  orderRequest: false,
+  userOrders: [],
+  orderModalData: null
 };
 // начать orderRequest
 const orderSlice = createSlice({
@@ -59,6 +67,9 @@ const orderSlice = createSlice({
       .addCase(sendOrder.rejected, (state, action) => {
         console.log('errr send', action);
         state.orderRequest = false;
+      })
+      .addCase(getUsersHistoryOrders.fulfilled, (state, action) => {
+        state.userOrders = action.payload;
       });
   },
   selectors: {
