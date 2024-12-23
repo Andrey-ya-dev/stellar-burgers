@@ -2,8 +2,13 @@ import { FC, useMemo } from 'react';
 import { TConstructorIngredient, TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { sendOrder } from '../../services/OrderSlice/orderSlice';
+import { useNavigate } from 'react-router-dom';
+import {
+  resetModalData,
+  sendOrder,
+  setOrderRequest
+} from '../../services/OrderSlice/orderSlice';
+import { clearConstructor } from '../../services/burgerSlice/burgerSlice';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора 
@@ -17,12 +22,13 @@ export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const constructorItems = useSelector((state) => state.burgerConstructor);
-  const isAuthUser = useSelector((state) => state.auth.isAuthUser);
+  const user = useSelector((state) => state.user.user);
 
-  // const orderRequest = useSelector((state) => state.auth.orderRequest);
+  const orderRequest = useSelector((state) => state.order.orderRequest);
+  const orderModalData = useSelector((state) => state.order.orderModalData);
 
-  const orderRequest = false;
-  const orderModalData = null;
+  // const orderRequest = false;
+  // const orderModalData = null;
 
   const orderSendData = useMemo(() => {
     const data = [];
@@ -32,23 +38,26 @@ export const BurgerConstructor: FC = () => {
   }, [constructorItems]);
 
   const onOrderClick = () => {
-    if (!isAuthUser) {
+    if (!user) {
       console.log('redirect order');
 
       return navigate('/login');
-      return <Navigate to={'/login'} />;
     }
 
     if (!constructorItems.bun || orderRequest) return;
 
-    if (isAuthUser) {
+    if (user) {
       console.log('send order');
 
       dispatch(sendOrder(orderSendData));
+      dispatch(clearConstructor());
     }
   };
 
-  const closeOrderModal = () => navigate('/');
+  const closeOrderModal = () => {
+    dispatch(setOrderRequest());
+    dispatch(resetModalData());
+  };
 
   const price = useMemo(
     () =>

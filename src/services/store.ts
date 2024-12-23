@@ -9,12 +9,18 @@ import { ingredientsReducer } from './indgredientSlice/ingredientSlice';
 import { burgerConstructorReducer } from './burgerSlice/burgerSlice';
 import { orderReducer } from './OrderSlice/orderSlice';
 import { authReducer } from './authSlice/authSlice';
+import { feedsReducer } from './feedsSlice/feedsSlice';
+import { registerReducer } from './registerSlice/registerSlice';
+import { userReducer } from './userSlice/userSlice';
 
 const rootReducer = {
   ingredients: ingredientsReducer,
   burgerConstructor: burgerConstructorReducer,
   order: orderReducer,
-  auth: authReducer
+  auth: authReducer,
+  feeds: feedsReducer,
+  register: registerReducer,
+  user: userReducer
 }; // Заменить на импорт настоящего редьюсера
 
 const store = configureStore({

@@ -2,7 +2,7 @@ import { setCookie, getCookie } from './cookie';
 import { TIngredient, TOrder, TOrdersData, TUser } from './types';
 
 const URL = process.env.BURGER_API_URL;
-
+// ВСПОМОГАТЕЛЬНАЯ Ф-Я
 const checkResponse = <T>(res: Response): Promise<T> =>
   res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 
@@ -14,7 +14,7 @@ type TRefreshResponse = TServerResponse<{
   refreshToken: string;
   accessToken: string;
 }>;
-
+// ЗАПРОС РЕФРЕШ ТОКЕНОВ
 export const refreshToken = (): Promise<TRefreshResponse> =>
   fetch(`${URL}/auth/token`, {
     method: 'POST',
@@ -43,13 +43,16 @@ export const fetchWithRefresh = async <T>(
     const res = await fetch(url, options);
     return await checkResponse<T>(res);
   } catch (err) {
-    if ((err as { message: string }).message === 'jwt expired') {
+    console.log('refresh atach', err);
+    if ((err as { message: string }).message === 'You should be authorised') {
       const refreshData = await refreshToken();
       if (options.headers) {
         (options.headers as { [key: string]: string }).authorization =
           refreshData.accessToken;
       }
       const res = await fetch(url, options);
+      console.log('refresh atach res on');
+
       return await checkResponse<T>(res);
     } else {
       return Promise.reject(err);
@@ -70,7 +73,7 @@ type TFeedsResponse = TServerResponse<{
 type TOrdersResponse = TServerResponse<{
   data: TOrder[];
 }>;
-
+// ПОЛУЧЕНИЕ ИНГРЕДИЕНТОВ
 export const getIngredientsApi = () =>
   fetch(`${URL}/ingredients`)
     .then((res) => checkResponse<TIngredientsResponse>(res))
@@ -78,7 +81,7 @@ export const getIngredientsApi = () =>
       if (data?.success) return data.data;
       return Promise.reject(data);
     });
-
+// ПОЛУЧЕНИЕ ЛЕНТЫ ЗАКАЗОВ
 export const getFeedsApi = () =>
   fetch(`${URL}/orders/all`)
     .then((res) => checkResponse<TFeedsResponse>(res))
@@ -86,7 +89,7 @@ export const getFeedsApi = () =>
       if (data?.success) return data;
       return Promise.reject(data);
     });
-
+// ПОЛУЧЕНИЕ ЗАКАЗОВ ПОЛЬЗОВАТЕЛЯ
 export const getOrdersApi = () =>
   fetchWithRefresh<TFeedsResponse>(`${URL}/orders`, {
     method: 'GET',
@@ -103,7 +106,8 @@ type TNewOrderResponse = TServerResponse<{
   order: TOrder;
   name: string;
 }>;
-
+//https://www.youtube.com/watch?v=mIYzp5rcTvU 1ю25
+// ЗАКАЗ БУРГЕРА
 export const orderBurgerApi = (data: string[]) =>
   fetchWithRefresh<TNewOrderResponse>(`${URL}/orders`, {
     method: 'POST',
@@ -122,7 +126,7 @@ export const orderBurgerApi = (data: string[]) =>
 type TOrderResponse = TServerResponse<{
   orders: TOrder[];
 }>;
-
+// ЗАПРОС ЗАКАЗА ПО НОМЕРУ ЗАКАЗА
 export const getOrderByNumberApi = (number: number) =>
   fetch(`${URL}/orders/${number}`, {
     method: 'GET',
@@ -142,7 +146,7 @@ type TAuthResponse = TServerResponse<{
   accessToken: string;
   user: TUser;
 }>;
-
+// РЕГЕСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ
 export const registerUserApi = (data: TRegisterData) =>
   fetch(`${URL}/auth/register`, {
     method: 'POST',
@@ -161,7 +165,7 @@ export type TLoginData = {
   email: string;
   password: string;
 };
-
+// АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ
 export const loginUserApi = (data: TLoginData) =>
   fetch(`${URL}/auth/login`, {
     method: 'POST',
@@ -175,7 +179,7 @@ export const loginUserApi = (data: TLoginData) =>
       if (data?.success) return data;
       return Promise.reject(data);
     });
-
+// ВОССТАНОВЛЕНИЕ ПАРОЛЯ ПОЛЬЗОВАТЕЛЯ
 export const forgotPasswordApi = (data: { email: string }) =>
   fetch(`${URL}/password-reset`, {
     method: 'POST',
@@ -189,7 +193,7 @@ export const forgotPasswordApi = (data: { email: string }) =>
       if (data?.success) return data;
       return Promise.reject(data);
     });
-
+// СБРОС/СМЕНА ПАРОЛЯ ПОЛЬЗОВАТЕЛЯ
 export const resetPasswordApi = (data: { password: string; token: string }) =>
   fetch(`${URL}/password-reset/reset`, {
     method: 'POST',
@@ -205,14 +209,14 @@ export const resetPasswordApi = (data: { password: string; token: string }) =>
     });
 
 type TUserResponse = TServerResponse<{ user: TUser }>;
-
+// ЗАПРОС ДАННЫХ ПОЛЬЗОВАТЕЛЯ
 export const getUserApi = () =>
   fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
     headers: {
       authorization: getCookie('accessToken')
     } as HeadersInit
   });
-
+// ОБНОВЛЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
 export const updateUserApi = (user: Partial<TRegisterData>) =>
   fetchWithRefresh<TUserResponse>(`${URL}/auth/user`, {
     method: 'PATCH',
@@ -222,7 +226,7 @@ export const updateUserApi = (user: Partial<TRegisterData>) =>
     } as HeadersInit,
     body: JSON.stringify(user)
   });
-
+// ВЫХОД ПОЛЬЗОВАТЕЛЯ
 export const logoutApi = () =>
   fetch(`${URL}/auth/logout`, {
     method: 'POST',

@@ -5,6 +5,7 @@ import { TIngredient } from '@utils-types';
 import { useParams } from 'react-router-dom';
 import { useSelector } from '../../services/store';
 import { getIngredientsData } from '../../services/indgredientSlice/ingredientSlice';
+import { getFeedsFromStore } from '../../services/feedsSlice/feedsSlice';
 
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора 
@@ -19,7 +20,7 @@ export const OrderInfo: FC = () => {
   };*/
   const { number } = useParams();
 
-  const orderData = useSelector((state) => state.order.orders).find(
+  const orderData = useSelector(getFeedsFromStore).find(
     (item) => item.number === Number(number)
   );
   console.log(orderData, ' order data');
@@ -73,6 +74,5 @@ export const OrderInfo: FC = () => {
     return <Preloader />;
   }
 
-  console.log(orderInfo, ' order info');
   return <OrderInfoUI orderInfo={orderInfo} />;
 };

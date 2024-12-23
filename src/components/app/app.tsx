@@ -13,43 +13,12 @@ import '../../index.css';
 import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import {
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-  useParams
-} from 'react-router-dom';
-import { ReactNode, useEffect } from 'react';
-import { useDispatch, useSelector } from '../../services/store';
-import { getCurrentUser } from '../../services/authSlice/authSlice';
-
-type TProtectedRoute = {
-  children: ReactNode;
-  onlyUnAuth?: boolean;
-};
-const ProtectedRoute = ({ onlyUnAuth, children }: TProtectedRoute) => {
-  const location = useLocation();
-  const isUserLoading = useSelector((state) => state.auth.isUserLoading);
-  const user = useSelector((state) => state.auth.user);
-
-  if (isUserLoading) {
-    console.log('preloader');
-  }
-
-  if (!onlyUnAuth && !user.name) {
-    return <Navigate replace to='/login' state={{ from: location }} />;
-  }
-
-  if (onlyUnAuth && user.name) {
-    const from = location.state?.from || { pathname: '/' };
-
-    return <Navigate replace to={from} />;
-  }
-
-  return children;
-};
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { ProtectedRoute } from '../protected-route/protected-route';
+import { useDispatch } from '../../services/store';
+import { useEffect } from 'react';
+import { checkUserAuth, getUser } from '../../services/userSlice/userSlice';
+import { getIngredients } from '../../services/indgredientSlice/ingredientSlice';
 
 const App = () => {
   const location = useLocation();
@@ -57,10 +26,13 @@ const App = () => {
   const background = location.state?.background;
   const orderNumber = location.state?.number;
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getCurrentUser());
-  }, []);
+  console.log('app load');
 
+  useEffect(() => {
+    dispatch(getUser());
+    dispatch(checkUserAuth());
+    dispatch(getIngredients());
+  }, []);
   return (
     <div className={styles.app}>
       <AppHeader />
@@ -149,7 +121,12 @@ const App = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='' onClose={() => {}}>
+              <Modal
+                title=''
+                onClose={() => {
+                  navigate('/profile/orders');
+                }}
+              >
                 <ProtectedRoute>
                   <OrderInfo />
                 </ProtectedRoute>
