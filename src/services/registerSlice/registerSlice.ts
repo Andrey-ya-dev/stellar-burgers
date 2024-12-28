@@ -3,21 +3,17 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
 
 export const registerUser = createAsyncThunk(
-  'api/register',
+  'register/registerUser',
   async (data: TRegisterData) => registerUserApi(data)
 );
 
 type TRegister = {
-  refreshToken: string;
-  accessToken: string;
   user: TUser | null;
   isRegisterLoading: boolean;
   errMsg: string;
 };
 
 const initialRegister: TRegister = {
-  refreshToken: '',
-  accessToken: '',
   user: null,
   isRegisterLoading: false,
   errMsg: ''
@@ -28,12 +24,6 @@ const registerSlice = createSlice({
   initialState: initialRegister,
   reducers: {},
   selectors: {
-    getRefreshToken(state) {
-      return state.refreshToken;
-    },
-    getAccessToken(state) {
-      return state.accessToken;
-    },
     getRegisterStatus(state) {
       return state.isRegisterLoading;
     },
@@ -49,8 +39,6 @@ const registerSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isRegisterLoading = false;
         state.user = action.payload.user;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.errMsg = action.error?.message || '';
@@ -58,10 +46,5 @@ const registerSlice = createSlice({
   }
 });
 
-export const {
-  getAccessToken,
-  getRefreshToken,
-  getRegisterStatus,
-  getUserFromStore
-} = registerSlice.selectors;
+export const { getRegisterStatus, getUserFromStore } = registerSlice.selectors;
 export const registerReducer = registerSlice.reducer;

@@ -10,7 +10,7 @@ export const Login: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.user.user);
   const isAuthStatus = useSelector((state) => state.auth.isAuthLoading);
 
   const handleSubmit = (e: SyntheticEvent) => {

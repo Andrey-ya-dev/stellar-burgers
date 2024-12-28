@@ -19,6 +19,7 @@ import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { checkUserAuth, getUser } from '../../services/userSlice/userSlice';
 import { getIngredients } from '../../services/indgredientSlice/ingredientSlice';
+import { getFeedsData } from '../../services/feedsSlice/feedsSlice';
 
 const App = () => {
   const location = useLocation();
@@ -32,6 +33,7 @@ const App = () => {
     dispatch(getUser());
     dispatch(checkUserAuth());
     dispatch(getIngredients());
+    dispatch(getFeedsData());
   }, []);
   return (
     <div className={styles.app}>
@@ -84,6 +86,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProfileOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <ProtectedRoute>
+              <OrderInfo />
             </ProtectedRoute>
           }
         />

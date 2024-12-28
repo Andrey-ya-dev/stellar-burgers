@@ -9,9 +9,8 @@ export const IngredientDetails: FC = () => {
   /** TODO: взять переменную из стора 
   const ingredientData = null;*/
   const { id: ingredientId } = useParams();
-  const ingredientData = useSelector(getIngredientsData).find(
-    (item) => item._id === ingredientId
-  );
+  const ingredients = useSelector(getIngredientsData);
+  const ingredientData = ingredients.find((item) => item._id === ingredientId);
 
   if (!ingredientData) {
     return <Preloader />;

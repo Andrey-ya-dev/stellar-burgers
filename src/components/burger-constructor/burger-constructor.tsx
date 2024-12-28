@@ -31,10 +31,13 @@ export const BurgerConstructor: FC = () => {
   // const orderModalData = null;
 
   const orderSendData = useMemo(() => {
-    const data = [];
-    data.push(constructorItems.bun._id);
+    if (constructorItems.bun) {
+      const data = [];
+      data.push(constructorItems?.bun._id);
 
-    return data.concat(constructorItems.ingredients.map((item) => item._id));
+      return data.concat(constructorItems.ingredients.map((item) => item._id));
+    }
+    return [];
   }, [constructorItems]);
 
   const onOrderClick = () => {

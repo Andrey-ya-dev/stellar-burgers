@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from '../../services/store';
 import { Navigate } from 'react-router-dom';
 import {
   registerUser,
-  getRefreshToken,
-  getAccessToken,
   getRegisterStatus
 } from '../../services/registerSlice/registerSlice';
 import { Preloader } from '@ui';
@@ -16,8 +14,7 @@ export const Register: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  const refreshToken = useSelector(getRefreshToken);
-  const accessToken = useSelector(getAccessToken);
+  const user = useSelector((state) => state.user.user);
   const isRegisterLoad = useSelector(getRegisterStatus);
 
   const handleSubmit = (e: SyntheticEvent) => {
@@ -39,12 +36,13 @@ export const Register: FC = () => {
   // testman5 testman5@email.ru testMan_5
   // testman6 testman6@email.ru testMan_6
   // testman7 testman7@email.ru testMan_7
+  // testman8 testman8@email.ru testMan_8
 
   if (isRegisterLoad) {
     return <Preloader />;
   }
 
-  if (refreshToken && accessToken) {
+  if (user) {
     return <Navigate replace to={'/'} />;
   }
 

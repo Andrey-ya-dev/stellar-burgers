@@ -3,11 +3,11 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 
 export const sendOrder = createAsyncThunk(
-  'api/sendOrder',
+  'order/sendOrder',
   async (data: string[]) => orderBurgerApi(data)
 );
 export const getUsersHistoryOrders = createAsyncThunk(
-  'api/usersOrders',
+  'order/usersOrders',
   async () => getOrdersApi()
 );
 

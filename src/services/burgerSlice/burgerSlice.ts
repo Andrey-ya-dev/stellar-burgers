@@ -2,12 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TIngredient } from '@utils-types';
 
 type TInitialBurgerConstructor = {
-  bun: TIngredient | { _id: string; price: number };
+  bun: TIngredient | null;
   ingredients: TIngredient[];
 };
 
 const initialBurgerConstructor: TInitialBurgerConstructor = {
-  bun: { _id: '', price: 0 },
+  bun: null,
   ingredients: []
 };
 
@@ -27,7 +27,7 @@ const burgerSlice = createSlice({
       );
     },
     clearConstructor(state) {
-      state.bun = { _id: '', price: 0 };
+      state.bun = null;
       state.ingredients = [];
     }
   },
