@@ -78,6 +78,7 @@ export const userSlice = createSlice({
         localStorage.setItem('refreshToken', action.payload.refreshToken);
 
         state.user = action.payload.user;
+        state.isAuthChecked = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoginLoading = false;
@@ -123,7 +124,11 @@ export const userSlice = createSlice({
   selectors: {
     getStoreUserData: (state) => state.user,
     getStoreLoadUserData: (state) => state.isUserLoading,
-    getStoreLoadAuthChecked: (state) => state.isAuthChecked
+    getStoreLoadAuthChecked: (state) => state.isAuthChecked,
+    getStoreLoadRegister: (state) => state.isRegisterLoading,
+    getStoreLoadLogout: (state) => state.isLogoutUser,
+    getStoreLoadLogin: (state) => state.isLoginLoading,
+    getStoreLoadUpdateUserData: (state) => state.isUpdateUserLoading
   }
 });
 
@@ -131,6 +136,10 @@ export const { authChecked } = userSlice.actions;
 export const {
   getStoreLoadAuthChecked,
   getStoreLoadUserData,
-  getStoreUserData
+  getStoreUserData,
+  getStoreLoadRegister,
+  getStoreLoadLogout,
+  getStoreLoadLogin,
+  getStoreLoadUpdateUserData
 } = userSlice.selectors;
 export const userReducer = userSlice.reducer;

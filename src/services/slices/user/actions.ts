@@ -9,7 +9,6 @@ import {
   updateUserApi
 } from '@api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getCookie } from '../../../utils/cookie';
 import { authChecked } from './userSlice';
 
 export const registerUser = createAsyncThunk(
@@ -38,7 +37,7 @@ export const getUserData = createAsyncThunk('user/getUserData', async () =>
 export const checkAuthUser = createAsyncThunk(
   'user/checkAuthUser',
   async (_, { dispatch }) => {
-    if (getCookie('accessToken')) {
+    if (localStorage.getItem('refreshToken')) {
       dispatch(getUserData()).finally(() => {
         dispatch(authChecked());
       });

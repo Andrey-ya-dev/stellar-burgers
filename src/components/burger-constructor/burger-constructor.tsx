@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { sendOrder } from '../../services/slices/order/actions';
 import { clearConstructor } from '../../services/slices/burgerConsturctor/burgerConstructorSlice';
 import {
+  getStoreModalData,
+  getStoreOrderRequest,
   resetModalData,
   setOrderRequest
 } from '../../services/slices/order/orderSlice';
@@ -15,8 +17,8 @@ export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
   const constructorItems = useSelector((state) => state.burgerConstructor);
-  const orderRequest = useSelector((state) => state.order.orderRequest);
-  const orderModalData = useSelector((state) => state.order.orderModalData);
+  const orderRequest = useSelector(getStoreOrderRequest);
+  const orderModalData = useSelector(getStoreModalData);
 
   const orderSendData = useMemo(() => {
     if (constructorItems.bun) {

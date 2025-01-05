@@ -1,10 +1,4 @@
-import {
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-  useParams
-} from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import {
   ConstructorPage,
@@ -24,10 +18,7 @@ import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { getIngredientsData } from '../../services/slices/ingredients/actions';
-import {
-  getFeedsData,
-  getUserOrders
-} from '../../services/slices/feeds/actions';
+import { getFeedsData } from '../../services/slices/feeds/actions';
 import { OnlyAuth, OnlyUnAuth } from '../protected-route/protected-route';
 import { checkAuthUser, getUserData } from '../../services/slices/user/actions';
 import { Wrapper } from '../ui/wrapper/wrapper';
@@ -43,7 +34,6 @@ const App = () => {
   useEffect(() => {
     dispatch(getIngredientsData());
     dispatch(getFeedsData());
-    dispatch(getUserData());
     dispatch(checkAuthUser());
   }, []);
 

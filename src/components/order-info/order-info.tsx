@@ -4,11 +4,13 @@ import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useParams } from 'react-router-dom';
 import { useSelector } from '../../services/store';
+import { getStoreIngredients } from '../../services/slices/ingredients/ingredientsSlice';
+import { getStoreFeed } from '../../services/slices/feeds/feedsSlice';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();
-  const ingredients = useSelector((state) => state.ingredients.ingredients);
-  const orderData = useSelector((state) => state.feeds.feed).find(
+  const ingredients = useSelector(getStoreIngredients);
+  const orderData = useSelector(getStoreFeed).find(
     (item) => item.number === Number(number)
   );
 

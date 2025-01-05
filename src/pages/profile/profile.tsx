@@ -3,15 +3,18 @@ import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
 import { Preloader } from '@ui';
 import { updateUserData } from '../../services/slices/user/actions';
+import {
+  getStoreLoadLogout,
+  getStoreLoadUpdateUserData,
+  getStoreUserData
+} from '../../services/slices/user/userSlice';
 
 export const Profile: FC = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
+  const user = useSelector(getStoreUserData);
 
-  const isLogoutLoading = useSelector((state) => state.user.isLogoutUser);
-  const isUpdateUserLoading = useSelector(
-    (state) => state.user.isUpdateUserLoading
-  );
+  const isLogoutLoading = useSelector(getStoreLoadLogout);
+  const isUpdateUserLoading = useSelector(getStoreLoadUpdateUserData);
 
   const [formValue, setFormValue] = useState({
     name: user?.name || '',

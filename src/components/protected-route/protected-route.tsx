@@ -1,6 +1,10 @@
 import { Preloader } from '@ui';
 import { useSelector } from '../../services/store';
 import { Navigate, useLocation } from 'react-router-dom';
+import {
+  getStoreLoadAuthChecked,
+  getStoreUserData
+} from '../../services/slices/user/userSlice';
 
 type TProtectedRouteProps = {
   component: React.JSX.Element;
@@ -11,8 +15,8 @@ export const ProtectedRoute = ({
   component,
   onlyUnAuth = false
 }: TProtectedRouteProps) => {
-  const isAuthChecked = useSelector((state) => state.user.isAuthChecked);
-  const user = useSelector((state) => state.user.user);
+  const isAuthChecked = useSelector(getStoreLoadAuthChecked);
+  const user = useSelector(getStoreUserData);
   const location = useLocation();
 
   if (!isAuthChecked) {

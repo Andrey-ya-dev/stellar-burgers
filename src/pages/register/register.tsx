@@ -4,16 +4,18 @@ import { useDispatch, useSelector } from '../../services/store';
 import { registerUser } from '../../services/slices/user/actions';
 import { Preloader } from '@ui';
 import { Navigate } from 'react-router-dom';
+import {
+  getStoreLoadRegister,
+  getStoreUserData
+} from '../../services/slices/user/userSlice';
 
 export const Register: FC = () => {
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  const isRegisterLoading = useSelector(
-    (state) => state.user.isRegisterLoading
-  );
-  const user = useSelector((state) => state.user.user);
+  const isRegisterLoading = useSelector(getStoreLoadRegister);
+  const user = useSelector(getStoreUserData);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
