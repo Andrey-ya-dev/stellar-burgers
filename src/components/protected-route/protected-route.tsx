@@ -1,14 +1,16 @@
 import { Preloader } from '@ui';
-import { ReactElement } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from '../../services/store';
+import { Navigate, useLocation } from 'react-router-dom';
 
-type TProtectedRoute = {
-  children: ReactElement;
+type TProtectedRouteProps = {
+  component: React.JSX.Element;
   onlyUnAuth?: boolean;
 };
 
-export const ProtectedRoute = ({ onlyUnAuth, children }: TProtectedRoute) => {
+export const ProtectedRoute = ({
+  component,
+  onlyUnAuth = false
+}: TProtectedRouteProps) => {
   const isAuthChecked = useSelector((state) => state.user.isAuthChecked);
   const user = useSelector((state) => state.user.user);
   const location = useLocation();
@@ -16,20 +18,23 @@ export const ProtectedRoute = ({ onlyUnAuth, children }: TProtectedRoute) => {
   if (!isAuthChecked) {
     return <Preloader />;
   }
-  //    falsy      false
-  if (!user && !onlyUnAuth) {
-    console.log('prtect redir to login', onlyUnAuth, user);
-    return <Navigate replace to={'/login'} />;
-  }
-  // если мы попадаем на маршруты /login/registrate и
-  // если данные есть в хранилеще
-  // onlyUnAuth -> true указывает на то что пользователь не атроризован и ему доступны маршруты /login /regestrate
-  //     true        trusy
-  if (onlyUnAuth && user) {
-    console.log('protected redir', user, onlyUnAuth);
-    const from = location.state?.from || { pathname: '/' };
-    return <Navigate replace to={from} />;
+
+  if (!onlyUnAuth && !user) {
+    return <Navigate to={'/login'} state={{ from: location }} />;
   }
 
-  return children;
+  if (onlyUnAuth && user) {
+    const { from } = location.state ?? { from: { pathname: '/' } };
+
+    return <Navigate to={from} />;
+  }
+
+  return component;
 };
+
+export const OnlyAuth = ProtectedRoute;
+export const OnlyUnAuth = ({
+  component
+}: {
+  component: React.JSX.Element;
+}): React.JSX.Element => <ProtectedRoute component={component} onlyUnAuth />;

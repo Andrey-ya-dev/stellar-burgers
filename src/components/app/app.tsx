@@ -1,4 +1,12 @@
 import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useParams
+} from 'react-router-dom';
+
+import {
   ConstructorPage,
   Feed,
   ForgotPassword,
@@ -13,104 +21,96 @@ import '../../index.css';
 import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { ProtectedRoute } from '../protected-route/protected-route';
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
-import { checkUserAuth, getUser } from '../../services/userSlice/userSlice';
-import { getIngredients } from '../../services/indgredientSlice/ingredientSlice';
-import { getFeedsData } from '../../services/feedsSlice/feedsSlice';
+import { getIngredientsData } from '../../services/slices/ingredients/actions';
+import {
+  getFeedsData,
+  getUserOrders
+} from '../../services/slices/feeds/actions';
+import { OnlyAuth, OnlyUnAuth } from '../protected-route/protected-route';
+import { checkAuthUser, getUserData } from '../../services/slices/user/actions';
+import { Wrapper } from '../ui/wrapper/wrapper';
+import { getLastArg } from '../../utils/helpers';
 
 const App = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
-  const navigate = useNavigate();
   const background = location.state?.background;
   const orderNumber = location.state?.number;
-  const dispatch = useDispatch();
-  console.log('app load');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getUser());
-    dispatch(checkUserAuth());
-    dispatch(getIngredients());
+    dispatch(getIngredientsData());
     dispatch(getFeedsData());
+    dispatch(getUserData());
+    dispatch(checkAuthUser());
   }, []);
+
+  const onCloseModal = () => {
+    navigate(-1);
+  };
+
   return (
     <div className={styles.app}>
       <AppHeader />
       <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
-        <Route
-          path='/login'
-          element={
-            <ProtectedRoute onlyUnAuth>
-              <Login />
-            </ProtectedRoute>
-          }
-        />
+        <Route path='/login' element={<OnlyUnAuth component={<Login />} />} />
         <Route
           path='/register'
-          element={
-            <ProtectedRoute onlyUnAuth>
-              <Register />
-            </ProtectedRoute>
-          }
+          element={<OnlyUnAuth component={<Register />} />}
         />
         <Route
           path='/forgot-password'
-          element={
-            <ProtectedRoute onlyUnAuth>
-              <ForgotPassword />
-            </ProtectedRoute>
-          }
+          element={<OnlyUnAuth component={<ForgotPassword />} />}
         />
         <Route
           path='/reset-password'
+          element={<OnlyUnAuth component={<ResetPassword />} />}
+        />
+        <Route
+          path='/ingredients/:id'
           element={
-            <ProtectedRoute>
-              <ResetPassword />
-            </ProtectedRoute>
+            <Wrapper title='Детали ингредиента'>
+              <IngredientDetails />
+            </Wrapper>
           }
         />
         <Route
-          path='/profile'
+          path='/feed/:number'
           element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
+            <Wrapper title={'#0' + getLastArg(location.pathname)}>
+              <OrderInfo />
+            </Wrapper>
           }
         />
+        <Route path='/profile' element={<OnlyAuth component={<Profile />} />} />
         <Route
           path='/profile/orders'
-          element={
-            <ProtectedRoute>
-              <ProfileOrders />
-            </ProtectedRoute>
-          }
+          element={<OnlyAuth component={<ProfileOrders />} />}
         />
         <Route
           path='/profile/orders/:number'
           element={
-            <ProtectedRoute>
-              <OrderInfo />
-            </ProtectedRoute>
+            <OnlyAuth
+              component={
+                <Wrapper title={'#0' + getLastArg(location.pathname)}>
+                  <OrderInfo />
+                </Wrapper>
+              }
+            />
           }
         />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
-      {/* MODALKI */}
       {background && (
         <Routes>
           <Route
             path='/feed/:number'
             element={
-              <Modal
-                title={orderNumber ? `#0${orderNumber}` : ''}
-                onClose={() => {
-                  navigate(-1);
-                }}
-              >
+              <Modal title={'#0' + orderNumber} onClose={onCloseModal}>
                 <OrderInfo />
               </Modal>
             }
@@ -118,12 +118,7 @@ const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal
-                title='Детали ингредиента'
-                onClose={() => {
-                  navigate(-1);
-                }}
-              >
+              <Modal title='Детали ингредиента' onClose={onCloseModal}>
                 <IngredientDetails />
               </Modal>
             }
@@ -131,15 +126,8 @@ const App = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal
-                title=''
-                onClose={() => {
-                  navigate('/profile/orders');
-                }}
-              >
-                <ProtectedRoute>
-                  <OrderInfo />
-                </ProtectedRoute>
+              <Modal title={'#0' + orderNumber} onClose={onCloseModal}>
+                <OnlyAuth component={<OrderInfo />} />
               </Modal>
             }
           />

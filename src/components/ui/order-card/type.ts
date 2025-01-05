@@ -4,7 +4,7 @@ import { TIngredient } from '@utils-types';
 export type OrderCardUIProps = {
   orderInfo: TOrderInfo;
   maxIngredients: number;
-  locationState: { background: Location; number: number };
+  locationState: { background: Location; number?: number };
 };
 
 type TOrderInfo = {

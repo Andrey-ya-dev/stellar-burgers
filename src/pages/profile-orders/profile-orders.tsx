@@ -1,50 +1,26 @@
 import { ProfileOrdersUI } from '@ui-pages';
 import { FC, useEffect } from 'react';
-import { useDispatch, useSelector } from '../../services/store';
-import { getUsersHistoryOrders } from '../../services/OrderSlice/orderSlice';
+import { useSelector, useDispatch } from '../../services/store';
+import { getUserOrders } from '../../services/slices/feeds/actions';
+import { Preloader } from '@ui';
 
 export const ProfileOrders: FC = () => {
-  /** TODO: взять переменную из стора 
-  const orders: TOrder[] = [];*/
-  const userOrders = useSelector((state) => state.order.userOrders);
+  const orders = useSelector((state) => state.feeds.userOrders);
   const dispatch = useDispatch();
+  const isLogoutLoading = useSelector((state) => state.user.isLogoutUser);
+  const isUserOrdersLoading = useSelector(
+    (state) => state.feeds.isUserOrdersLoading
+  );
 
   useEffect(() => {
-    if (!userOrders.length) {
-      dispatch(getUsersHistoryOrders());
+    if (!orders.length) {
+      dispatch(getUserOrders());
     }
   }, []);
 
-  return <ProfileOrdersUI orders={userOrders} />;
+  if (isLogoutLoading || isUserOrdersLoading) {
+    return <Preloader />;
+  }
+
+  return <ProfileOrdersUI orders={orders} />;
 };
-/*
-Загрузка: 
-  запрос юзера 
-  запрос продуктов
-  В сторе:
-    сетим переменную изАуз
-    сетим переменную ингр
-неАуз:
-  собираем бургер
-  открываем модалки ингр
-  кнопка оформить редир -> /login
-ауз:
-  запрос юзера/профиль
-  изАуз -> true
-  история заказов
-юзер:
-  редактировать имя,почта,пароль
-
-  восстановление пароля
-
-слайсы:
-  ingredients
-  регистрация
-  логин/auth
-  юзер
-  бургер
-  заказы
-  ??:
-  лента заказов/feed
-  история заказов юзера
-*/

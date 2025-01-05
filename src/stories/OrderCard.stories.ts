@@ -80,8 +80,7 @@ export const DefaultOrderCard: Story = {
         pathname: '/',
         search: '',
         state: null
-      },
-      number: 1
+      }
     }
   }
 };
