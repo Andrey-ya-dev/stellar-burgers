@@ -62,6 +62,10 @@ export const userSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isRegisterLoading = false;
+
+        setCookie('accessToken', action.payload.accessToken);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+
         state.user = action.payload.user;
       })
       .addCase(registerUser.rejected, (state, action) => {
