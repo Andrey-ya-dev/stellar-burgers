@@ -14,9 +14,7 @@ export const Feed: FC = () => {
   const isFeedLoading = useSelector(getStoreLoadFeed);
 
   useEffect(() => {
-    if (!orders.length) {
-      dispatch(getFeedsData());
-    }
+    dispatch(getFeedsData());
   }, []);
 
   if (isFeedLoading) {

@@ -20,7 +20,7 @@ import { useEffect } from 'react';
 import { getIngredientsData } from '../../services/slices/ingredients/actions';
 import { getFeedsData } from '../../services/slices/feeds/actions';
 import { OnlyAuth, OnlyUnAuth } from '../protected-route/protected-route';
-import { checkAuthUser, getUserData } from '../../services/slices/user/actions';
+import { checkAuthUser } from '../../services/slices/user/actions';
 import { Wrapper } from '../ui/wrapper/wrapper';
 import { getLastArg } from '../../utils/helpers';
 
