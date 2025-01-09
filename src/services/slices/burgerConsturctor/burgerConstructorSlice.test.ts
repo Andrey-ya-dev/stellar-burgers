@@ -6,7 +6,10 @@ import {
   addIngredient,
   burgerConstructorReducer,
   initialState as burgerInitSate,
-  clearConstructor
+  clearConstructor,
+  moveDownIngredient,
+  moveUpIngredient,
+  TBurgerConstructor
 } from './burgerConstructorSlice';
 
 jest.mock('uuid');
@@ -64,5 +67,39 @@ describe('Тесты actions в burgerConstructorSlice', () => {
     );
 
     expect(clearState).toEqual(burgerInitSate);
+  });
+
+  test('Тест перемещения ингредиента вверх', () => {
+    const stateWithIngredient: TBurgerConstructor = {
+      bun: buns[0],
+      ingredients: [
+        { ...burgerIngredients[0], id: '1' },
+        { ...burgerIngredients[1], id: '2' }
+      ]
+    };
+    const changedState = burgerConstructorReducer(
+      stateWithIngredient,
+      moveUpIngredient(1)
+    );
+
+    const { ingredients } = changedState;
+    expect(ingredients[1]._id).toBe(stateWithIngredient.ingredients[0]._id);
+  });
+
+  test('Тест перемещения ингредиента вниз', () => {
+    const stateWithIngredient: TBurgerConstructor = {
+      bun: buns[0],
+      ingredients: [
+        { ...burgerIngredients[0], id: '1' },
+        { ...burgerIngredients[1], id: '2' }
+      ]
+    };
+    const changedState = burgerConstructorReducer(
+      stateWithIngredient,
+      moveDownIngredient(0)
+    );
+
+    const { ingredients } = changedState;
+    expect(ingredients[1]._id).toBe(stateWithIngredient.ingredients[0]._id);
   });
 });
