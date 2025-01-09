@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 import { sendOrder } from './actions';
 
-type TSendOrder = {
+export type TSendOrder = {
   orderRequest: boolean;
   orderModalData: TOrder | null;
   errMsg?: string;
