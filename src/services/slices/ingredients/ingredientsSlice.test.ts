@@ -25,7 +25,7 @@ describe('Тесты actions в ingredientsSlice', () => {
       expect(newState.errMsg).toBeFalsy();
     });
 
-    test('fulfilled rejected', async () => {
+    test('getIngredientsData rejected', async () => {
       const error = {
         name: 'rejected',
         message: 'some error'
