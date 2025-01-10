@@ -27,7 +27,7 @@ afterEach(() => {
 describe('Тесты страницы конструктора (ConstructorPage)', () => {
   beforeEach(() => {
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' });
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
   });
 
   describe('Тесты загрузки ингредиентов и добавление их в конструктор', () => {
