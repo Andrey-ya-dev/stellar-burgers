@@ -1,6 +1,14 @@
 import { accessToken, refreshToken } from '../../fixtures/token.json';
 import { order } from '../../fixtures/order.json';
 
+const CONSTRUCTOR_ELEMENT =
+  '.constructor-element > .constructor-element__row > .constructor-element__text';
+const BUN_ADD_BUTTON = `[data-cy=bun] .common_button`;
+const INGREDIENT_ADD_BUTTON = `[data-cy=main] .common_button`;
+const BUN_ELEMENT = `[data-cy=bun]`;
+const MODAL_CONTENT = `#modals div:first-child`;
+const MODAL_CLOSE_BUTTON = `div:first-child > button > svg`;
+
 beforeEach(() => {
   cy.intercept('GET', 'api/auth/user', { fixture: 'user.json' });
   cy.setCookie('accessToken', accessToken);
@@ -26,25 +34,13 @@ describe('Тесты страницы конструктора (ConstructorPage)
     it('Тесты добавление ингредиентов', () => {
       cy.request('/api/ingredients');
 
-      cy.get(`[data-cy=bun] .common_button`).first().click();
-      cy.get(`[data-cy=main] .common_button`).first().click();
+      cy.get(`${BUN_ADD_BUTTON}`).first().click();
+      cy.get(`${INGREDIENT_ADD_BUTTON}`).first().click();
 
       const burgerConstructor = {
-        bunTop: cy
-          .get(
-            '.constructor-element > .constructor-element__row > .constructor-element__text'
-          )
-          .first(),
-        mainIngredient: cy
-          .get(
-            '.constructor-element > .constructor-element__row > .constructor-element__text'
-          )
-          .eq(1),
-        bunBottom: cy
-          .get(
-            '.constructor-element > .constructor-element__row > .constructor-element__text'
-          )
-          .last()
+        bunTop: cy.get(`${CONSTRUCTOR_ELEMENT}`).first(),
+        mainIngredient: cy.get(`${CONSTRUCTOR_ELEMENT}`).eq(1),
+        bunBottom: cy.get(`${CONSTRUCTOR_ELEMENT}`).last()
       };
 
       burgerConstructor.bunTop.contains('Краторная булка N-200i (верх)');
@@ -57,30 +53,29 @@ describe('Тесты страницы конструктора (ConstructorPage)
 
   describe('Тесты модального окна игредиента', () => {
     it('Тест открытия модального окна', () => {
-      cy.get(`[data-cy=bun]`).first().click();
+      cy.get(`${BUN_ELEMENT}`).first().click();
 
-      const modal = cy.get('#modals div:first-child');
-      const h3 = modal.get('div:last-child h3');
+      cy.get(`${MODAL_CONTENT}`).find('h3').as('modal-content-title');
 
-      h3.contains('Краторная булка N-200i');
+      cy.get('@modal-content-title').contains('Краторная булка N-200i');
     });
 
     it('Тест закрытия модального окна по кнопке', () => {
-      cy.get(`[data-cy=bun]`).first().click();
+      cy.get(`${BUN_ELEMENT}`).first().click();
 
-      const modal = cy.get('#modals div:first-child').as('modal-window');
-      modal.get('div:first-child > button > svg').click();
+      cy.get(`${MODAL_CONTENT}`).as('modal-window');
+      cy.get('@modal-window').find(`${MODAL_CLOSE_BUTTON}`).click();
 
-      cy.get('modal-window').should('not.exist');
+      cy.get('@modal-window').should('not.exist');
     });
 
     it('Тест закрытия модального окна по оверлею', () => {
-      cy.get(`[data-cy=bun]`).first().click();
+      cy.get(`${BUN_ELEMENT}`).first().click();
 
-      const modal = cy.get('#modals > div:first-child').as('modal-window');
-      const overlay = modal.get('#modals > div:nth-child(2)');
+      cy.get(`${MODAL_CONTENT}`).as('modal-window');
+      cy.get('@modal-window').find('div:nth-child(2)').as('overlay');
 
-      overlay.click({ force: true });
+      cy.get('@overlay').click({ force: true });
 
       cy.get('modal-window').should('not.exist');
     });
@@ -88,21 +83,21 @@ describe('Тесты страницы конструктора (ConstructorPage)
 
   describe('Тест создания заказа и отправки', () => {
     it('Тест добавления и отправки ', () => {
-      cy.get(`[data-cy=bun] .common_button`).first().click();
-      cy.get(`[data-cy=main] .common_button`).first().click();
+      cy.get(`${BUN_ADD_BUTTON}`).first().click();
+      cy.get(`${INGREDIENT_ADD_BUTTON}`).first().click();
 
       cy.get(
-        '#root > div > main > div > section:nth-child(2) > div > button'
+        '#root > div > main > div > section:nth-child(2) > div > .button'
       ).click();
 
-      const orderModal = cy.get('#modals > div:first-child');
-      const orderNumber = orderModal.get('div:nth-child(2) > h2');
+      cy.get(`${MODAL_CONTENT}`).as('order-modal');
+      cy.get('@order-modal')
+        .find('div:nth-child(2) > h2')
+        .as('order-title-number');
 
-      orderNumber.contains(order.number);
+      cy.get('@order-title-number').contains(order.number);
 
-      orderModal
-        .get('div:first-child > div:first-child > button > svg')
-        .click();
+      cy.get('@order-modal').find(`${MODAL_CLOSE_BUTTON}`).click();
 
       cy.get('modal').should('not.exist');
 
