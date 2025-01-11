@@ -1,0 +1,49 @@
+{
+  "success": true,
+  "name": "Краторный spicy био-марсианский бургер",
+  "order": {
+    "ingredients": [
+      {
+        "_id": "643d69a5c3f7b9001cfa093c",
+        "name": "Краторная булка N-200i",
+        "type": "bun",
+        "proteins": 80,
+        "fat": 24,
+        "carbohydrates": 53,
+        "calories": 420,
+        "price": 1255,
+        "image": "https://code.s3.yandex.net/react/code/bun-02.png",
+        "image_mobile": "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
+        "image_large": "https://code.s3.yandex.net/react/code/bun-02-large.png",
+        "__v": 0
+      },
+      {
+        "_id": "643d69a5c3f7b9001cfa0941",
+        "name": "Биокотлета из марсианской Магнолии",
+        "type": "main",
+        "proteins": 420,
+        "fat": 142,
+        "carbohydrates": 242,
+        "calories": 4242,
+        "price": 424,
+        "image": "https://code.s3.yandex.net/react/code/meat-01.png",
+        "image_mobile": "https://code.s3.yandex.net/react/code/meat-01-mobile.png",
+        "image_large": "https://code.s3.yandex.net/react/code/meat-01-large.png",
+        "__v": 0
+      }
+    ],
+    "_id": "677e8c9d133acd001be490c2",
+    "owner": {
+      "name": "testman7",
+      "email": "testman7@email.ru",
+      "createdAt": "2024-12-22T20:36:30.655Z",
+      "updatedAt": "2025-01-05T14:36:57.135Z"
+    },
+    "status": "done",
+    "name": "Краторный spicy био-марсианский бургер",
+    "createdAt": "2025-01-08T14:33:01.291Z",
+    "updatedAt": "2025-01-08T14:33:02.549Z",
+    "number": 65024,
+    "price": 1769
+  }
+}
